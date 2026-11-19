@@ -1,0 +1,101 @@
+{
+    # Admin tat (tranh xung dot voi Caddy hien co tren :2019).
+    admin off
+    # Chi phuc vu HTTP sau tunnel — khong xin chung chi, khong chiem cong khac.
+    auto_https off
+    log {
+        output file /var/log/caddy/blackfriday/caddy.log {
+            roll_size 10MB
+            roll_keep 7
+        }
+    }
+}
+
+# Chi nghe localhost:38080 (bind) va phuc vu ca 2 Host: ten mien cong khai (qua tunnel) + 127.0.0.1 (kiem tra truc tiep).
+# LUU Y (bai hoc khi deploy): dia chi IP trong site address chi dung de khop Host, KHONG gioi han bind —
+# Caddy van bind :38080 tren moi interface neu khong co `bind`. Bat buoc phai co `bind 127.0.0.1`.
+# Neu khong co Host sandeal trong site address, request qua tunnel (Host: sandeal...) bi tra ve 200 rong.
+http://sandeal.microbit.io.vn:38080, http://127.0.0.1:38080 {
+    bind 127.0.0.1
+    encode zstd gzip
+    root * /var/www/blackfriday
+    file_server
+
+    # Khong cho Google index cho toi khi Claude duyet soft launch (24/11).
+    header X-Robots-Tag "noindex"
+
+    # Cache: HTML + deals.json cache ngan (~60s) de cap nhat deal hien nhanh.
+    @static {
+        path / /index.html /style.css /app.js /deals.json
+    }
+    header @static Cache-Control "public, max-age=60"
+
+    # /go/* KHONG duoc cache — redirect phai di qua server de log click.
+    @go {
+        path /go/*
+    }
+    header @go Cache-Control "no-store"
+
+    # Click log rieng cho site nay: chi ghi thoi gian, duong dan (/go/<deal_id>), referer.
+    # Xoa toan bo nhom IP/header: remote_ip, client_ip, remote_port, CF-Connecting-IP, X-Forwarded-For, Cf-*, User-Agent.
+    log {
+        output file /var/log/caddy/blackfriday/access.log {
+            roll_size 10MB
+            roll_keep 7
+        }
+        format filter {
+            wrap json
+            fields {
+                request>remote_ip delete
+                request>client_ip delete
+                request>remote_port delete
+                request>headers>CF-Connecting-IP delete
+                request>headers>X-Forwarded-For delete
+                request>headers>Cf-Connecting-Ip delete
+                request>headers>Cf-Ipcountry delete
+                request>headers>Cf-Ray delete
+                request>headers>Cf-Visitor delete
+                request>headers>Cf-Warp-Tag-Id delete
+                request>headers>User-Agent delete
+            }
+        }
+    }
+
+    # /go/<deal_id> -> 302 toi link affiliate (neu co) hoac link_goc.
+    # Sinh tu dong tu deals.json (35 deal).
+    redir /go/adobe-bf26-firefly-pro-50off https://www.adobe.com/nz/products/firefly/plans.html 302
+    redir /go/adobe-bf26-firefly-proplus-60off https://www.adobe.com/nz/products/firefly/plans.html 302
+    redir /go/elevenlabs-bf26-creator-55off https://elevenlabs.io/pricing 302
+    redir /go/elevenlabs-bf26-pro-55off https://elevenlabs.io/pricing 302
+    redir /go/hetzner-bf26-cloud-50credit https://www.hetzner.com/promo-code/ 302
+    redir /go/higgsfield-bf26-plus-45off https://higgsfield.ai/pricing 302
+    redir /go/higgsfield-bf26-ultra-60off https://higgsfield.ai/pricing 302
+    redir /go/lazada-bf26-lazbeauty-50off https://pages.lazada.vn/wow/gcp/route/lazada/vn/upr_1000345_lazada/channel/vn/upr-router/vn?wx_navbar_transparent=true&hybrid=1&data_prefetch=true&at_iframe=1&disable_bounces=true&lzd_navbar_hidden=true&pha=true&disable_pull_refresh=true&prefetch_replace=1&wh_pid=%2Flazada%2Fmegascenario%2Fvn%2Flazbeauty-11-2026%2FJ38XsyQrCW&spm=a2o4n.homepage.bannerSliderDesktop.d_2 302
+    redir /go/lazada-bf26-lazmall-brandday-35off https://pages.lazada.vn/wow/gcp/route/lazada/vn/upr_1000345_lazada/channel/vn/upr-router/vn?wx_navbar_transparent=true&hybrid=1&data_prefetch=true&at_iframe=1&disable_bounces=true&lzd_navbar_hidden=true&pha=true&disable_pull_refresh=true&prefetch_replace=1&wh_pid=/lazada/superseries/vn/tmall-brand-day-18-19Nov/nha-cua 302
+    redir /go/lazada-bf26-palmers-50k-off https://pages.lazada.vn/wow/gcp/route/lazada/vn/upr_1000345_lazada/channel/vn/upr-router/vn?wx_navbar_transparent=true&hybrid=1&data_prefetch=true&at_iframe=1&disable_bounces=true&lzd_navbar_hidden=true&pha=true&disable_pull_refresh=true&prefetch_replace=1&wh_pid=%2Flazada%2Fmegascenario%2Fvn%2Flazbeauty-11-2026%2FJ38XsyQrCW&spm=a2o4n.homepage.bannerSliderDesktop.d_2 302
+    redir /go/lazada-bf26-tmall-super88-50off https://pages.lazada.vn/wow/gcp/route/lazada/vn/upr_1000345_lazada/channel/vn/upr-router/vn?hybrid=1&data_prefetch=true&prefetch_replace=1&at_iframe=1&wh_pid=%2Flazada%2Fchannel%2Fvn%2Flazmall-channel%2Fthuong-hieu-trung-chinh-hang&spm=a2o4n.homepage.platformCampaignBanner.d_0 302
+    redir /go/namecheap-bf26-co-87off https://www.namecheap.com/domain-web-hosting-ssl-deals/black-friday/ 302
+    redir /go/namecheap-bf26-com-31off https://www.namecheap.com/domain-web-hosting-ssl-deals/black-friday/ 302
+    redir /go/namecheap-bf26-com-transfer-43off https://www.namecheap.com/domain-web-hosting-ssl-deals/black-friday/ 302
+    redir /go/namecheap-bf26-net-20off https://www.namecheap.com/domain-web-hosting-ssl-deals/black-friday/ 302
+    redir /go/namecheap-bf26-org-48off https://www.namecheap.com/domain-web-hosting-ssl-deals/black-friday/ 302
+    redir /go/namecheap-bf26-vps-magnetar-40off https://www.namecheap.com/418ccf9974b846f6bb51416485b88e2d/brand-promos/black-friday-2026/ 302
+    redir /go/namecheap-bf26-vps-pulsar-54off https://www.namecheap.com/418ccf9974b846f6bb51416485b88e2d/brand-promos/black-friday-2026/ 302
+    redir /go/namecheap-bf26-vps-quasar-41off https://www.namecheap.com/418ccf9974b846f6bb51416485b88e2d/brand-promos/black-friday-2026/ 302
+    redir /go/pavietnam-bf26-com-95off http://pavietnam.vn/en/ten-mien-bang-gia.html 302
+    redir /go/pavietnam-bf26-comvn-42off http://pavietnam.vn/en/ten-mien-bang-gia.html 302
+    redir /go/pavietnam-bf26-xyz-92off http://pavietnam.vn/en/ten-mien-bang-gia.html 302
+    redir /go/porkbun-bf26-asia-91off https://porkbun.com/event/blackfriday 302
+    redir /go/porkbun-bf26-blog-90off https://porkbun.com/event/blackfriday 302
+    redir /go/porkbun-bf26-bond-92off https://porkbun.com/event/blackfriday 302
+    redir /go/porkbun-bf26-shop-92off https://porkbun.com/event/blackfriday 302
+    redir /go/porkbun-bf26-xyz-91off https://porkbun.com/event/blackfriday 302
+    redir /go/prowritingaid-bf26-premium-yearly-50off https://prowritingaid.com/pricing 302
+    redir /go/prowritingaid-bf26-premiumpro-lifetime-50off https://prowritingaid.com/pricing 302
+    redir /go/shopee-bf26-newuser-30k-off https://shopee.vn/m/don-dau-tien-mien-phi 302
+    redir /go/shopee-bf26-newuser-ship-300k https://shopee.vn/m/don-dau-tien-mien-phi 302
+    redir /go/shopee-bf26-newuser-ship-500k https://shopee.vn/m/don-dau-tien-mien-phi 302
+    redir /go/shopee-bf26-teachersday-50off https://shopee.vn/m/teacherday-1126 302
+    redir /go/shopee-bf26-torriden-15k-off https://shopee.vn/m/teacherday-1126 302
+    redir /go/vultr-bf26-cloud-300credit https://discover.vultr.com/matthewberman 302
+}

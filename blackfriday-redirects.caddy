@@ -1,0 +1,28 @@
+    # /go/<deal_id> redirects — generated from deals.json (26 deals).
+    # Target = link_affiliate if set, else link_goc.
+    redir /go/adobe-bf26-firefly-pro-50off https://www.adobe.com/nz/products/firefly/plans.html 302
+    redir /go/adobe-bf26-firefly-proplus-60off https://www.adobe.com/nz/products/firefly/plans.html 302
+    redir /go/elevenlabs-bf26-creator-55off https://elevenlabs.io/pricing 302
+    redir /go/elevenlabs-bf26-pro-55off https://elevenlabs.io/pricing 302
+    redir /go/hetzner-bf26-cloud-50credit https://www.hetzner.com/promo-code/ 302
+    redir /go/higgsfield-bf26-plus-45off https://higgsfield.ai/pricing 302
+    redir /go/higgsfield-bf26-ultra-60off https://higgsfield.ai/pricing 302
+    redir /go/namecheap-bf26-co-87off https://www.namecheap.com/domain-web-hosting-ssl-deals/black-friday/ 302
+    redir /go/namecheap-bf26-com-31off https://www.namecheap.com/domain-web-hosting-ssl-deals/black-friday/ 302
+    redir /go/namecheap-bf26-com-transfer-43off https://www.namecheap.com/domain-web-hosting-ssl-deals/black-friday/ 302
+    redir /go/namecheap-bf26-net-20off https://www.namecheap.com/domain-web-hosting-ssl-deals/black-friday/ 302
+    redir /go/namecheap-bf26-org-48off https://www.namecheap.com/domain-web-hosting-ssl-deals/black-friday/ 302
+    redir /go/namecheap-bf26-vps-magnetar-40off https://www.namecheap.com/418ccf9974b846f6bb51416485b88e2d/brand-promos/black-friday-2026/ 302
+    redir /go/namecheap-bf26-vps-pulsar-54off https://www.namecheap.com/418ccf9974b846f6bb51416485b88e2d/brand-promos/black-friday-2026/ 302
+    redir /go/namecheap-bf26-vps-quasar-41off https://www.namecheap.com/418ccf9974b846f6bb51416485b88e2d/brand-promos/black-friday-2026/ 302
+    redir /go/pavietnam-bf26-com-95off http://pavietnam.vn/en/ten-mien-bang-gia.html 302
+    redir /go/pavietnam-bf26-comvn-42off http://pavietnam.vn/en/ten-mien-bang-gia.html 302
+    redir /go/pavietnam-bf26-xyz-92off http://pavietnam.vn/en/ten-mien-bang-gia.html 302
+    redir /go/porkbun-bf26-asia-91off https://porkbun.com/event/blackfriday 302
+    redir /go/porkbun-bf26-blog-90off https://porkbun.com/event/blackfriday 302
+    redir /go/porkbun-bf26-bond-92off https://porkbun.com/event/blackfriday 302
+    redir /go/porkbun-bf26-shop-92off https://porkbun.com/event/blackfriday 302
+    redir /go/porkbun-bf26-xyz-91off https://porkbun.com/event/blackfriday 302
+    redir /go/prowritingaid-bf26-premium-yearly-50off https://prowritingaid.com/pricing 302
+    redir /go/prowritingaid-bf26-premiumpro-lifetime-50off https://prowritingaid.com/pricing 302
+    redir /go/vultr-bf26-cloud-300credit https://discover.vultr.com/matthewberman 302

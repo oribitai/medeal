@@ -1,0 +1,10 @@
+# Thu muc test chua binary Caddy (50MB) — khong dua len git
+test/
+# File backup
+*.bak-*
+*.bak
+__pycache__/
+*.pyc
+# Ban ghi dong bo cua Muse (nam ngoai thu muc source)
+*.muse-github-snapshot-sync.json
+*.muse-github-snapshot-sync.json.tmp-*
